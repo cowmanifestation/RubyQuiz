@@ -1,23 +1,12 @@
 class MadLibs
-  def initialize
-    @sentence = "My ((name: a relative)) is like a ((type of animal)) with a ((adjective)) ((a body part)).  Everyone ((present tense action)) my ((name)) for it."
+  def initialize(filename)
+    @file = filename
 
-    #@sentence.scan(/\(\((?:(\w+):)?([\w\s]+)\)\)/)
-
-    @prompts = @sentence.scan(/\(\((?:(\w+):)?([\w\s]+)\)\)/)
-
-    #[["name", " a relative"], [nil, "type of animal"], [nil, "adjective"], 
-    #[nil, "body part"], [nil, "present tense action"], [nil, "name"]]
-    @keywords = []
+    run
   end
 
-
-  def substitute(pattern, substitution)
-    @sentence.gsub!(/\(\(#{pattern}\)\)/, substitution)
-  end
-
-  def run
-    @prompts.each do |prompt|
+  def get_substitutions(prompts)
+    prompts.each do |prompt|
       if prompt[0]
         @keywords << prompt[0]
         print prompt[1] + ": "
@@ -33,11 +22,30 @@ class MadLibs
         end
       end
     end
+  end
 
-    puts @sentence
+  def substitute(pattern, substitution)
+    @sentence.gsub!(/\(\(#{pattern}\)\)/, substitution)
+  end
+
+  def run
+    File.open(@file) do |file|
+      file.each do |line|
+        @sentence = line
+        prompts = @sentence.scan(/\(\((?:(\w+):)?([\w\s]+)\)\)/)
+        @keywords = []
+
+        get_substitutions(prompts)
+
+        puts @sentence
+        print "Continue? (y/n)"
+        answer = gets
+        if answer == "n\n"
+          exit
+        end
+      end
+    end
   end
 end
 
-m = MadLibs.new
-m.run
-
+m = MadLibs.new("sentences.txt")
