@@ -1,22 +1,22 @@
 class MadLibs
-  @sentence = "My ((name: a relative)) is like a ((type of animal)) with a ((adjective)) ((a body part)).  Everyone ((present tense action)) my ((name)) for it."
+  def initialize
+    @sentence = "My ((name: a relative)) is like a ((type of animal)) with a ((adjective)) ((a body part)).  Everyone ((present tense action)) my ((name)) for it."
 
-  #@sentence.scan(/\(\((?:(\w+):)?([\w\s]+)\)\)/)
+    #@sentence.scan(/\(\((?:(\w+):)?([\w\s]+)\)\)/)
 
-  @prompts = @sentence.scan(/\(\((?:(\w+):)?([\w\s]+)\)\)/)
+    @prompts = @sentence.scan(/\(\((?:(\w+):)?([\w\s]+)\)\)/)
 
-  #[["name", " a relative"], [nil, "type of animal"], [nil, "adjective"], 
-  #[nil, "body part"], [nil, "present tense action"], [nil, "name"]]
+    #[["name", " a relative"], [nil, "type of animal"], [nil, "adjective"], 
+    #[nil, "body part"], [nil, "present tense action"], [nil, "name"]]
+    @keywords = []
+  end
 
-  @keywords = []
 
   def substitute(pattern, substitution)
     @sentence.gsub!(/\(\(#{pattern}\)\)/, substitution)
   end
 
   def run
-    puts @prompts
-=begin
     @prompts.each do |prompt|
       if prompt[0]
         @keywords << prompt[0]
@@ -35,7 +35,6 @@ class MadLibs
     end
 
     puts @sentence
-=end
   end
 end
 
