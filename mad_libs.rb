@@ -1,6 +1,6 @@
 class MadLibs
   def initialize(filename)
-    @file = filename
+    @file = File.new(filename)
 
     run
   end
@@ -11,7 +11,7 @@ class MadLibs
 
   def get_substitution(prompt)
     print prompt + ": "
-    substitution = gets.chomp
+    substitution = STDIN.gets.chomp
     return substitution
   end
 
@@ -36,7 +36,7 @@ class MadLibs
     sentence.gsub!(/\(\(#{pattern}\)\)/, substitution)
   end
 
-  def ask_if_continuing(file)
+  def ask_if_continuing
     print "Continue? (y/n) "
     answer = gets
     if answer == "n\n"
@@ -46,21 +46,19 @@ class MadLibs
 
 
   def run
-    File.open(@file) do |file|
-      file.each do |line|
-        keywords = []
-        prompts = get_prompts(line)
+    @file.each do |line|
+      keywords = []
+      prompts = get_prompts(line)
 
-        substitute(line, keywords, prompts)
+      substitute(line, keywords, prompts)
 
-        puts line
+      puts line
 
-        unless file.eof?
-          ask_if_continuing(file)
-        end
+      unless @file.eof?
+        ask_if_continuing
       end
     end
   end
 end
 
-m = MadLibs.new("sentences.txt")
+m = MadLibs.new(ARGV[0])
